@@ -27,12 +27,23 @@ namespace Silk.NET.Windowing.Common
         /// Gets the monitor on which this window is active.
         /// </summary>
         IMonitor Monitor { get; set; }
-        
+
         /// <summary>
         /// Gets or sets whether the window has been requested to close.
         /// </summary>
         new bool IsClosing { get; set; }
-        
+
+        /// <summary>
+        /// Gets the distances in screen coordinates from the edges of the content area to the corresponding edges of
+        /// the full window.
+        /// </summary>
+        /// <remarks>
+        /// Because these are distances and not coordinates, they are always zero or positive.
+        /// </remarks>
+        /// <seealso cref="WindowExtensions.GetFullSize"/>
+        // This is in IWindow because it can't be configured.
+        Rectangle BorderSize { get; }
+
         /// <summary>
         /// Raised when the window is moved.
         /// </summary>

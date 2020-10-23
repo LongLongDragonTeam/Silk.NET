@@ -4,6 +4,7 @@
 // of the MIT license. See the LICENSE file for details.
 
 using System;
+using System.Drawing;
 using Silk.NET.Windowing.Common.Structs;
 
 namespace Silk.NET.Windowing.Common
@@ -44,18 +45,49 @@ namespace Silk.NET.Windowing.Common
         public static void Run(this IView view)
         {
             view.Initialize();
-            while (!view.IsClosing)
-            {
-                view.DoEvents();
-                if (!view.IsClosing)
+            view.Run
+            (
+                () =>
                 {
-                    view.DoUpdate();
-                    view.DoRender();
+                    view.DoEvents();
+                    if (!view.IsClosing)
+                    {
+                        view.DoUpdate();
+                        view.DoRender();
+                    }
                 }
-            }
+            );
 
             view.DoEvents();
             view.Reset();
+        }
+
+        /// <summary>
+        /// Gets the full size of the given window including its borders.
+        /// </summary>
+        /// <param name="window">The window to get size information from.</param>
+        /// <returns>The full size of the window (including both content area and borders)</returns>
+        public static Size GetFullSize(this IWindow window) => Size.Add(window.Size, window.BorderSize.Size);
+
+        /// <summary>
+        /// Centers this window to the given monitor or, if null, the current monitor the window's on.
+        /// </summary>
+        /// <param name="window">The window to center.</param>
+        /// <param name="monitor">The specific monitor to center the window to, if any.</param>
+        public static void Center(this IWindow window, IMonitor? monitor = null)
+        {
+            monitor ??= window.Monitor;
+            var monitorBounds = monitor.Bounds;
+            var windowFullSize = window.GetFullSize();
+            window.Position = Point.Add
+            (
+                monitorBounds.Location,
+                new Size
+                (
+                    monitorBounds.Size.Width / 2 - windowFullSize.Width / 2,
+                    monitorBounds.Size.Height / 2 - windowFullSize.Height / 2
+                )
+            );
         }
 
         /// <summary>
@@ -70,6 +102,6 @@ namespace Silk.NET.Windowing.Common
         /// <param name="window">The window.</param>
         /// <param name="icon">The icon to set.</param>
         public static void SetWindowIcon(this IWindow window, ref WindowIcon icon) => window.SetWindowIcon
-            (new[] {icon});
+            (new[] { icon });
     }
 }

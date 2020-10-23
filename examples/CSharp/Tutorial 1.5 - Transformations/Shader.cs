@@ -20,10 +20,10 @@ namespace Tutorial
             _gl.AttachShader(_handle, vertex);
             _gl.AttachShader(_handle, fragment);
             _gl.LinkProgram(_handle);
-            string infoLog = _gl.GetProgramInfoLog(_handle);
-            if (!string.IsNullOrWhiteSpace(infoLog))
+            _gl.GetProgram(_handle, GLEnum.LinkStatus, out var status);
+            if (status == 0)
             {
-                throw new Exception($"Program failed to link with error: {infoLog}");
+                throw new Exception($"Program failed to link with error: {_gl.GetProgramInfoLog(_handle)}");
             }
             _gl.DetachShader(_handle, vertex);
             _gl.DetachShader(_handle, fragment);
@@ -56,7 +56,7 @@ namespace Tutorial
                 throw new Exception($"{name} uniform not found on shader.");
             }
             Use();
-            _gl.UniformMatrix4(location, 1, false, (float*)&value);
+            _gl.UniformMatrix4(location, 1, false, (float*) &value);
         }
 
         public void SetUniform(string name, float value)

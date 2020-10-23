@@ -1,4 +1,4 @@
-﻿// This file is no-longer Ultz Confidential Information and is now deemed "Public Knowledge" as defined in section 1(j)
+// This file is no-longer Ultz Confidential Information and is now deemed "Public Knowledge" as defined in section 1(j)
 // of the Ultz Non-Disclosure Agreement (OmegaNDA) as of 01/05/2020.
 //
 // Signed-off by Dylan Perks, Chief Executive.
@@ -22,12 +22,12 @@ using XWindow = Vulkan.Xlib.Window;
 namespace Silk.NET.Windowing.Extensions.Veldrid
 {
     /// <summary>
-    /// Contains classes for creating 
+    /// Contains classes for creating
     /// </summary>
     public static class VeldridWindow
     {
         // TODO view support
-        
+
         [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
         static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex = -6);
 
@@ -248,7 +248,7 @@ namespace Silk.NET.Windowing.Extensions.Veldrid
                     // do nothing
                 }
             }
-            
+
             throw new PlatformNotSupportedException();
         }
 
@@ -264,7 +264,7 @@ namespace Silk.NET.Windowing.Extensions.Veldrid
                     var x11Display = glfw.Library.LoadFunction<GetX11Display>("glfwGetX11Display")();
                     if (x11Display != IntPtr.Zero && x11Window != IntPtr.Zero)
                     {
-                        return VkSurfaceSource.CreateXlib((Display*)x11Display, new XWindow{Value = x11Window});
+                        return VkSurfaceSource.CreateXlib((Display*) x11Display, new XWindow { Value = x11Window });
                     }
                 }
                 catch (GlfwException)
@@ -293,10 +293,10 @@ namespace Silk.NET.Windowing.Extensions.Veldrid
                     // do nothing
                 }
             }
-            
+
             throw new PlatformNotSupportedException();
         }
-        
+
         public static unsafe GraphicsDevice CreateVulkanGraphicsDevice(GraphicsDeviceOptions options, IView window)
             => CreateVulkanGraphicsDevice(options, window, false);
         public static unsafe GraphicsDevice CreateVulkanGraphicsDevice(
@@ -306,8 +306,8 @@ namespace Silk.NET.Windowing.Extensions.Veldrid
         {
             SwapchainDescription scDesc = new SwapchainDescription(
                 GetSwapchainSource(window),
-                (uint)window.Size.Width,
-                (uint)window.Size.Height,
+                (uint) window.Size.Width,
+                (uint) window.Size.Height,
                 options.SwapchainDepthFormat,
                 options.SyncToVerticalBlank,
                 colorSrgb);
@@ -326,7 +326,7 @@ namespace Silk.NET.Windowing.Extensions.Veldrid
             SwapchainSource source = GetSwapchainSource(window);
             SwapchainDescription swapchainDesc = new SwapchainDescription(
                 source,
-                (uint)window.Size.Width, (uint)window.Size.Height,
+                (uint) window.Size.Width, (uint) window.Size.Height,
                 options.SwapchainDepthFormat,
                 options.SyncToVerticalBlank,
                 colorSrgb);
@@ -368,15 +368,15 @@ namespace Silk.NET.Windowing.Extensions.Veldrid
                 context => GlfwProvider.GLFW.Value.MakeContextCurrent((WindowHandle*) context),
                 () => (IntPtr) GlfwProvider.GLFW.Value.GetCurrentContext(),
                 () => GlfwProvider.GLFW.Value.MakeContextCurrent(default),
-                _ => {},
+                _ => { },
                 () => GlfwProvider.GLFW.Value.SwapBuffers((WindowHandle*) window.Handle),
                 sync => GlfwProvider.GLFW.Value.SwapInterval(sync ? 1 : 0));
 
             return GraphicsDevice.CreateOpenGL(
                 options,
                 platformInfo,
-                (uint)window.Size.Width,
-                (uint)window.Size.Height);
+                (uint) window.Size.Width,
+                (uint) window.Size.Height);
         }
 
         private static void SetGlContextAttributes(GraphicsDeviceOptions options, GraphicsBackend backend, ref WindowOptions opts)
@@ -447,7 +447,7 @@ namespace Silk.NET.Windowing.Extensions.Veldrid
             SwapchainSource source = GetSwapchainSource(window);
             SwapchainDescription swapchainDesc = new SwapchainDescription(
                 source,
-                (uint)window.Size.Width, (uint)window.Size.Height,
+                (uint) window.Size.Width, (uint) window.Size.Height,
                 options.SwapchainDepthFormat,
                 options.SyncToVerticalBlank,
                 options.SwapchainSrgbFormat);

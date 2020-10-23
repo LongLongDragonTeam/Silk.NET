@@ -3,8 +3,6 @@ using Silk.NET.Input.Common;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using Silk.NET.Windowing.Common;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -23,7 +21,6 @@ namespace Tutorial
         private static BufferObject<float> Vbo;
         private static BufferObject<uint> Ebo;
         private static VertexArrayObject<float, uint> VaoCube;
-        private static VertexArrayObject<float, uint> VaoLamp;
         private static Shader LightingShader;
         private static Shader LampShader;
 
@@ -31,9 +28,6 @@ namespace Tutorial
 
         //Used to track change in mouse movement to allow for moving of the Camera
         private static PointF LastMousePosition;
-
-        //Track when the window started so we can use the time elapsed to rotate the cube
-        private static DateTime StartTime;
 
         private static readonly float[] Vertices =
         {
@@ -104,7 +98,6 @@ namespace Tutorial
 
         private static void OnLoad()
         {
-            StartTime = DateTime.UtcNow;
             IInputContext input = window.CreateInput();
             primaryKeyboard = input.Keyboards.FirstOrDefault();
             if (primaryKeyboard != null)
@@ -113,6 +106,7 @@ namespace Tutorial
             }
             for (int i = 0; i < input.Mice.Count; i++)
             {
+                input.Mice[i].Cursor.CursorMode = CursorMode.Raw;
                 input.Mice[i].MouseMove += OnMouseMove;
                 input.Mice[i].Scroll += OnMouseWheel;
             }
@@ -136,7 +130,7 @@ namespace Tutorial
 
         private static unsafe void OnUpdate(double deltaTime)
         {
-            var moveSpeed = 2.5f * (float)deltaTime;
+            var moveSpeed = 2.5f * (float) deltaTime;
 
             if (primaryKeyboard.IsKeyPressed(Key.W))
             {
@@ -163,7 +157,7 @@ namespace Tutorial
         private static unsafe void OnRender(double deltaTime)
         {
             Gl.Enable(EnableCap.DepthTest);
-            Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+            Gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
             VaoCube.Bind();
             LightingShader.Use();
@@ -194,7 +188,7 @@ namespace Tutorial
 
         private static unsafe void OnMouseMove(IMouse mouse, PointF position)
         {
-            var lookSensitivity = 0.02f;
+            var lookSensitivity = 0.1f;
             if (LastMousePosition == default) { LastMousePosition = position; }
             else
             {
